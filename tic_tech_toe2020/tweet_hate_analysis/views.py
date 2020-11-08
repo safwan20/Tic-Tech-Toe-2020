@@ -42,13 +42,13 @@ def dashboard(request):
     print('REPLIES:')
     for reply in replies:
         reply_dict = reply.__dict__
-        mrulay_ko_dena = {
+        data_dict = {
             'is_reply': True,
             'username': handle,
             'text': reply_dict.get('text'),
             'date_time': reply_dict.get('created_at')
         }
-        print(mrulay_ko_dena)
-        print(pred.pred(mrulay_ko_dena))
+        print(data_dict)
+        print(pred.pred(data_dict))
 
     return render(request, 'dashboard.html')
