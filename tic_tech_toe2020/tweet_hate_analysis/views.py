@@ -1,7 +1,14 @@
 from django.shortcuts import render
 from tic_tech_toe2020.local_settings import *
 import tweepy
+import json
 from . import pred
+from textblob import TextBlob
+
+
+def get_polarity(text):
+    blob = TextBlob(text)
+    return blob.sentiment.polarity
 
 
 def get_twitter_api():
@@ -28,18 +35,10 @@ def dashboard(request):
             timeout=999999).items(1000):
         if hasattr(tweet, 'in_reply_to_status_id_str'):
             if (tweet.in_reply_to_status_id_str == tweet_id):
-                print(tweet)
                 replies.append(tweet)
 
-    '''
-    inp_dic={
-        is_reply:True,
-        username:'mohit',
-        text:"chu hai",
-        date_time: '4:30',
-    }
-    '''
-    print('REPLIES:')
+    negative = 0
+    results = []
     for reply in replies:
         reply_dict = reply.__dict__
         data_dict = {
@@ -48,8 +47,41 @@ def dashboard(request):
             'text': reply_dict.get('text'),
             'date_time': reply_dict.get('created_at')
         }
-        # print(data_dict)
-        print(pred.pred(data_dict))
-    context = {'positive_percent': 34, 'negative_percent': 66}
+        result = pred.pred(data_dict)
+        results.append(result)
+        negative += result['hate_speech_prob']
+
+    negative /= len(replies)
+
+    tweet_text = api.get_status(tweet_id).text
+    tweet_positive = (get_polarity(tweet_text) + 1)/2
+
+    tweets_hate_by_date = {}
+    tweets_total_by_date = {}
+    for result in results:
+        date_time, hate_speech_prob = result['date_time'], result['hate_speech_prob']
+        if date_time.date() in tweets_hate_by_date:
+            tweets_hate_by_date[date_time.date(
+            )] += int(hate_speech_prob > 0.5)
+        else:
+            tweets_hate_by_date[date_time.date()] = int(hate_speech_prob > 0.5)
+
+        if date_time.date() in tweets_total_by_date:
+            tweets_total_by_date[date_time.date()] += 1
+        else:
+            tweets_total_by_date[date_time.date()] = 1
+
+    bar_data = [['Date', 'Non-hate', 'Hate']]
+    for date in tweets_hate_by_date:
+        bar_data.append([str(date),
+                         tweets_total_by_date[date] - tweets_hate_by_date[date], tweets_hate_by_date[date]])
+
+    context = {
+        'reply_negative_percent': negative * 100,
+        'reply_positive_percent': (1 - negative) * 100,
+        'tweet_positive_percent': tweet_positive * 100,
+        'tweet_negative_percent': (1 - tweet_positive) * 100,
+        'bar_data': json.dumps(bar_data)
+    }
 
     return render(request, 'dashboard.html', context)

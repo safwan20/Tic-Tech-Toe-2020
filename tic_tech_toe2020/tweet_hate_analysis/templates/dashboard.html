@@ -57,8 +57,18 @@
         words are smaller and darker.
       </div>
     </div>
-    <p style="display: none;" id="positive_percent">{{positive_percent}} </p>
-    <p style="display: none;" id="negative_percent">{{negative_percent}} </p>
+    <p style="display: none" id="tweet_positive_percent">
+      {{tweet_positive_percent}}
+    </p>
+    <p style="display: none" id="tweet_negative_percent">
+      {{tweet_negative_percent}}
+    </p>
+    <p style="display: none" id="reply_positive_percent">
+      {{reply_positive_percent}}
+    </p>
+    <p style="display: none" id="reply_negative_percent">
+      {{reply_negative_percent}}
+    </p>
 
     <!-- Optional JavaScript; choose one of the two! -->
 
@@ -80,16 +90,15 @@
       type="text/javascript"
       src="https://www.gstatic.com/charts/loader.js"
     ></script>
+
     <script type="text/javascript">
-      
       google.charts.load("current", { packages: ["corechart"] });
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ["Task", "Hours per Day"],
-          ["Positive POV", parseInt($('#positive_percent').text())],
-          ["Negative POV", parseInt($('#negative_percent').text())],
-
+          ["Positive POV", parseInt($("#reply_positive_percent").text())],
+          ["Negative POV", parseInt($("#reply_negative_percent").text())],
         ]);
 
         var options = {
@@ -110,11 +119,8 @@
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ["Task", "Hours per Day"],
-          ["Work", 11],
-          ["Eat", 2],
-          ["Commute", 2],
-          ["Watch TV", 2],
-          ["Sleep", 7],
+          ["Positive POV", parseInt($("#tweet_positive_percent").text())],
+          ["Negative POV", parseInt($("#tweet_negative_percent").text())],
         ]);
 
         var options = {
@@ -129,42 +135,20 @@
       }
     </script>
 
-    <script type="text/javascript">
-      google.charts.setOnLoadCallback(drawChart);
+    <script language="JavaScript" type="text/javascript">
       function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ["Element", "Density", { role: "style" }],
-          ["Copper", 8.94, "#b87333"],
-          ["Silver", 10.49, "silver"],
-          ["Gold", 19.3, "gold"],
-          ["Platinum", 21.45, "color: #e5e4e2"],
-        ]);
+        var data = {{ bar_data|safe }};
+        var data = google.visualization.arrayToDataTable(data);
 
-        var view = new google.visualization.DataView(data);
-        view.setColumns([
-          0,
-          1,
-          {
-            calc: "stringify",
-            sourceColumn: 1,
-            type: "string",
-            role: "annotation",
-          },
-          2,
-        ]);
+        var options = { title: "", isStacked: true };
 
-        var options = {
-          title: "Density of Precious Metals, in g/cm^3",
-          width: 600,
-          height: 400,
-          bar: { groupWidth: "95%" },
-          legend: { position: "none" },
-        };
-        var chart = new google.visualization.ColumnChart(
+        // Instantiate and draw the chart.
+        var chart = new google.visualization.BarChart(
           document.getElementById("columnchart_values")
         );
-        chart.draw(view, options);
+        chart.draw(data, options);
       }
+      google.charts.setOnLoadCallback(drawChart);
     </script>
 
     <script type="text/javascript">
@@ -264,367 +248,6 @@
           .style("font-size", function (d) {
             return d.size + "px";
           })
-          .attr("text-anchor", "middle")
-          .attr("transform", function (d) {
-            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-          })
-          .text(function (d) {
-            return d.text;
-          });
-      }
-    </script>
-
-    <script>
-      var frequency_list = [
-        { text: "study", size: 40 },
-        { text: "motion", size: 15 },
-        { text: "forces", size: 10 },
-        { text: "electricity", size: 15 },
-        { text: "movement", size: 10 },
-        { text: "relation", size: 5 },
-        { text: "things", size: 10 },
-        { text: "force", size: 5 },
-        { text: "ad", size: 5 },
-        { text: "energy", size: 85 },
-        { text: "living", size: 5 },
-        { text: "nonliving", size: 5 },
-        { text: "laws", size: 15 },
-        { text: "speed", size: 45 },
-        { text: "velocity", size: 30 },
-        { text: "define", size: 5 },
-        { text: "constraints", size: 5 },
-        { text: "universe", size: 10 },
-        { text: "physics", size: 120 },
-        { text: "describing", size: 5 },
-        { text: "matter", size: 90 },
-        { text: "physics-the", size: 5 },
-        { text: "world", size: 10 },
-        { text: "works", size: 10 },
-        { text: "science", size: 70 },
-        { text: "interactions", size: 30 },
-        { text: "studies", size: 5 },
-        { text: "properties", size: 45 },
-        { text: "nature", size: 40 },
-        { text: "branch", size: 30 },
-        { text: "concerned", size: 25 },
-        { text: "source", size: 40 },
-        { text: "google", size: 10 },
-        { text: "defintions", size: 5 },
-        { text: "two", size: 15 },
-        { text: "grouped", size: 15 },
-        { text: "traditional", size: 15 },
-        { text: "fields", size: 15 },
-        { text: "acoustics", size: 15 },
-        { text: "optics", size: 15 },
-        { text: "mechanics", size: 20 },
-        { text: "thermodynamics", size: 15 },
-        { text: "electromagnetism", size: 15 },
-        { text: "modern", size: 15 },
-        { text: "extensions", size: 15 },
-        { text: "thefreedictionary", size: 15 },
-        { text: "interaction", size: 15 },
-        { text: "org", size: 25 },
-        { text: "answers", size: 5 },
-        { text: "natural", size: 15 },
-        { text: "objects", size: 5 },
-        { text: "treats", size: 10 },
-        { text: "acting", size: 5 },
-        { text: "department", size: 5 },
-        { text: "gravitation", size: 5 },
-        { text: "heat", size: 10 },
-        { text: "light", size: 10 },
-        { text: "magnetism", size: 10 },
-        { text: "modify", size: 5 },
-        { text: "general", size: 10 },
-        { text: "bodies", size: 5 },
-        { text: "philosophy", size: 5 },
-        { text: "brainyquote", size: 5 },
-        { text: "words", size: 5 },
-        { text: "ph", size: 5 },
-        { text: "html", size: 5 },
-        { text: "lrl", size: 5 },
-        { text: "zgzmeylfwuy", size: 5 },
-        { text: "subject", size: 5 },
-        { text: "distinguished", size: 5 },
-        { text: "chemistry", size: 5 },
-        { text: "biology", size: 5 },
-        { text: "includes", size: 5 },
-        { text: "radiation", size: 5 },
-        { text: "sound", size: 5 },
-        { text: "structure", size: 5 },
-        { text: "atoms", size: 5 },
-        { text: "including", size: 10 },
-        { text: "atomic", size: 10 },
-        { text: "nuclear", size: 10 },
-        { text: "cryogenics", size: 10 },
-        { text: "solid-state", size: 10 },
-        { text: "particle", size: 10 },
-        { text: "plasma", size: 10 },
-        { text: "deals", size: 5 },
-        { text: "merriam-webster", size: 5 },
-        { text: "dictionary", size: 10 },
-        { text: "analysis", size: 5 },
-        { text: "conducted", size: 5 },
-        { text: "order", size: 5 },
-        { text: "understand", size: 5 },
-        { text: "behaves", size: 5 },
-        { text: "en", size: 5 },
-        { text: "wikipedia", size: 5 },
-        { text: "wiki", size: 5 },
-        { text: "physics-", size: 5 },
-        { text: "physical", size: 5 },
-        { text: "behaviour", size: 5 },
-        { text: "collinsdictionary", size: 5 },
-        { text: "english", size: 5 },
-        { text: "time", size: 35 },
-        { text: "distance", size: 35 },
-        { text: "wheels", size: 5 },
-        { text: "revelations", size: 5 },
-        { text: "minute", size: 5 },
-        { text: "acceleration", size: 20 },
-        { text: "torque", size: 5 },
-        { text: "wheel", size: 5 },
-        { text: "rotations", size: 5 },
-        { text: "resistance", size: 5 },
-        { text: "momentum", size: 5 },
-        { text: "measure", size: 10 },
-        { text: "direction", size: 10 },
-        { text: "car", size: 5 },
-        { text: "add", size: 5 },
-        { text: "traveled", size: 5 },
-        { text: "weight", size: 5 },
-        { text: "electrical", size: 5 },
-        { text: "power", size: 5 },
-      ];
-
-      var color = d3.scale
-        .linear()
-        .domain([0, 1, 2, 3, 4, 5, 6, 10, 15, 20, 100])
-        .range([
-          "#ddd",
-          "#ccc",
-          "#bbb",
-          "#aaa",
-          "#999",
-          "#888",
-          "#777",
-          "#666",
-          "#555",
-          "#444",
-          "#333",
-          "#222",
-        ]);
-
-      d3.layout
-        .cloud()
-        .size([800, 300])
-        .words(frequency_list)
-        .rotate(0)
-        .fontSize(function (d) {
-          return d.size;
-        })
-        .on("end", draw)
-        .start();
-
-      function draw(words) {
-        d3.select("body")
-          .append("svg")
-          .attr("width", 850)
-          .attr("height", 350)
-          .attr("class", "wordcloud")
-          .append("g")
-          // without the transform, words words would get cutoff to the left and top, they would
-          // appear outside of the SVG area
-          .attr("transform", "translate(320,200)")
-          .selectAll("text")
-          .data(words)
-          .enter()
-          .append("text")
-          .style("font-size", function (d) {
-            return d.size + "px";
-          })
-          .style("fill", function (d, i) {
-            return color(i);
-          })
-          .attr("transform", function (d) {
-            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-          })
-          .text(function (d) {
-            return d.text;
-          });
-      }
-    </script>
-
-    <script>
-      //Simple animated example of d3-cloud - https://github.com/jasondavies/d3-cloud
-      //Based on https://github.com/jasondavies/d3-cloud/blob/master/examples/simple.html
-
-      // Encapsulate the word cloud functionality
-      function wordCloud(selector) {
-        var fill = d3.scale.category20();
-
-        //Construct the word cloud's SVG element
-        var svg = d3
-          .select(selector)
-          .append("svg")
-          .attr("width", 500)
-          .attr("height", 500)
-          .append("g")
-          .attr("transform", "translate(250,250)");
-
-        //Draw the word cloud
-        function draw(words) {
-          var cloud = svg.selectAll("g text").data(words, function (d) {
-            return d.text;
-          });
-
-          //Entering words
-          cloud
-            .enter()
-            .append("text")
-            .style("font-family", "Impact")
-            .style("fill", function (d, i) {
-              return fill(i);
-            })
-            .attr("text-anchor", "middle")
-            .attr("font-size", 1)
-            .text(function (d) {
-              return d.text;
-            });
-
-          //Entering and existing words
-          cloud
-            .transition()
-            .duration(600)
-            .style("font-size", function (d) {
-              return d.size + "px";
-            })
-            .attr("transform", function (d) {
-              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-            })
-            .style("fill-opacity", 1);
-
-          //Exiting words
-          cloud
-            .exit()
-            .transition()
-            .duration(200)
-            .style("fill-opacity", 1e-6)
-            .attr("font-size", 1)
-            .remove();
-        }
-
-        //Use the module pattern to encapsulate the visualisation code. We'll
-        // expose only the parts that need to be public.
-        return {
-          //Recompute the word cloud for a new set of words. This method will
-          // asycnhronously call draw when the layout has been computed.
-          //The outside world will need to call this function, so make it part
-          // of the wordCloud return value.
-          update: function (words) {
-            d3.layout
-              .cloud()
-              .size([500, 500])
-              .words(words)
-              .padding(5)
-              .rotate(function () {
-                return ~~(Math.random() * 2) * 90;
-              })
-              .font("Impact")
-              .fontSize(function (d) {
-                return d.size;
-              })
-              .on("end", draw)
-              .start();
-          },
-        };
-      }
-
-      //Some sample data - http://en.wikiquote.org/wiki/Opening_lines
-      var words = ["A A A A B"];
-
-      //Prepare one of the sample sentences by removing punctuation,
-      // creating an array of words and computing a random size attribute.
-      function getWords(i) {
-        return words[i]
-          .replace(/[!\.,:;\?]/g, "")
-          .split(" ")
-          .map(function (d) {
-            return { text: d, size: 10 + Math.random() * 60 };
-          });
-      }
-
-      //This method tells the word cloud to redraw with a new set of words.
-      //In reality the new words would probably come from a server request,
-      // user input or some other source.
-      function showNewWords(vis, i) {
-        i = i || 0;
-
-        vis.update(getWords(i++ % words.length));
-        setTimeout(function () {
-          showNewWords(vis, i + 1);
-        }, 2000);
-      }
-
-      //Create a new instance of the word cloud visualisation.
-      var myWordCloud = wordCloud("body");
-
-      //Start cycling through the demo data
-      showNewWords(myWordCloud);
-    </script>
-
-    <script>
-      var layout = cloud()
-        .size([500, 500])
-        .words(
-          [
-            "Hello",
-            "world",
-            "normally",
-            "you",
-            "want",
-            "more",
-            "words",
-            "than",
-            "this",
-          ].map(function (d) {
-            return { text: d, size: 10 + Math.random() * 90, test: "haha" };
-          })
-        )
-        .padding(5)
-        .rotate(function () {
-          return ~~(Math.random() * 2) * 90;
-        })
-        .font("Impact")
-        .fontSize(function (d) {
-          return d.size;
-        })
-        .on("end", draw);
-
-      layout.start();
-
-      function draw(words) {
-        d3.select("body")
-          .append("svg")
-          .attr("width", layout.size()[0])
-          .attr("height", layout.size()[1])
-          .append("g")
-          .attr(
-            "transform",
-            "translate(" +
-              layout.size()[0] / 2 +
-              "," +
-              layout.size()[1] / 2 +
-              ")"
-          )
-          .selectAll("text")
-          .data(words)
-          .enter()
-          .append("text")
-          .style("font-size", function (d) {
-            return d.size + "px";
-          })
-          .style("font-family", "Impact")
           .attr("text-anchor", "middle")
           .attr("transform", function (d) {
             return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
