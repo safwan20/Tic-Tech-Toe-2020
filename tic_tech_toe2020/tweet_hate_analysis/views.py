@@ -48,7 +48,8 @@ def dashboard(request):
             'text': reply_dict.get('text'),
             'date_time': reply_dict.get('created_at')
         }
-        print(data_dict)
+        # print(data_dict)
         print(pred.pred(data_dict))
+    context = {'positive_percent': 34, 'negative_percent': 66}
 
-    return render(request, 'dashboard.html')
+    return render(request, 'dashboard.html', context)
