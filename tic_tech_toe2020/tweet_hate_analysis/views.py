@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from tic_tech_toe2020.local_settings import *
 import tweepy
+from . import pred
 
 
 def get_twitter_api():
@@ -27,6 +28,7 @@ def dashboard(request):
             timeout=999999).items(1000):
         if hasattr(tweet, 'in_reply_to_status_id_str'):
             if (tweet.in_reply_to_status_id_str == tweet_id):
+                print(tweet)
                 replies.append(tweet)
 
     '''
@@ -47,5 +49,6 @@ def dashboard(request):
             'date_time': reply_dict.get('created_at')
         }
         print(mrulay_ko_dena)
+        print(pred.pred(mrulay_ko_dena))
 
     return render(request, 'dashboard.html')
