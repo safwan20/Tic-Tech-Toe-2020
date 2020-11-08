@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HELLO WORLD</title>
+  </head>
+  <body>
+    <h1>HELLO</h1>
+    <form action="dashboard" method="POST">
+      {% csrf_token %}
+      <input name="url" type="text" placeholder="Tweet URL" />
+      <input type="submit" value="SEARCH" />
+    </form>
+  </body>
+</html>

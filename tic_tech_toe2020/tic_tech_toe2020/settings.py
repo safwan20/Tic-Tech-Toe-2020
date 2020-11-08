@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 try:
-    from local_settings import SECRET_KEY
+    from .local_settings import SECRET_KEY
 except ImportError:
     pass
 
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'tic_tech_toe2020.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['tweet_hate_analysis/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
