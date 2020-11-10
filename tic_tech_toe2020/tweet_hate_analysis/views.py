@@ -77,6 +77,7 @@ def dashboard(request):
                          tweets_total_by_date[date] - tweets_hate_by_date[date], tweets_hate_by_date[date]])
 
     context = {
+        'tweet_text': tweet_text,
         'reply_negative_percent': negative * 100,
         'reply_positive_percent': (1 - negative) * 100,
         'tweet_positive_percent': tweet_positive * 100,
